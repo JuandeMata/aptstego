@@ -70,9 +70,13 @@ public class Stego {
         return byteImage[IMAGE_START_POSITION];
     }
 
-    public static void main(String[] args) throws URISyntaxException {
+    public static void main(String[] args) throws URISyntaxException, IOException {
         Stego stego = new Stego(Stego.class.getClassLoader()
                 .getResource("foto.bmp").toURI());
+        byte[] juankerImage = stego.encodeTextIntoImage("patata".getBytes());
+        URI juankerFoto = Stego.class.getClassLoader()
+                .getResource("juankerfoto.bmp").toURI();
+        Files.write(Paths.get(juankerFoto), juankerImage);
     }
 
     private class PixelIterator implements Iterator<Integer> {
