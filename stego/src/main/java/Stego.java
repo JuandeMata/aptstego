@@ -6,7 +6,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 public class Stego {
 
@@ -42,15 +44,21 @@ public class Stego {
         return byteImage;
     }
 
-    public byte[] decodeTextIntoImage() {
+    public byte[] decodeTextFromImage() {
+        List<Byte> message = new ArrayList<>();
+        var pixelIterator = new PixelIterator();
+        while(pixelIterator.hasNext()) {
+            var position = pixelIterator.next();
+            message.add(byteImage[position]);
+        }
         return null;
     }
 
     private boolean isPossibleToHide() {
-        return (getImageWidth() * getBitsPerPixel()) % PADDING_SIZE != 0;
+        return (getImageWidth() * (getBitsPerPixel() / 8)) % PADDING_SIZE != 0;
     }
 
-    private long getAmountOfBytes() {
+    private int getAmountOfBytes() {
         return ((getImageWidth() * getBitsPerPixel()) % PADDING_SIZE) * getImageHeight();
     }
 
@@ -71,12 +79,14 @@ public class Stego {
     }
 
     public static void main(String[] args) throws URISyntaxException, IOException {
-        Stego stego = new Stego(Stego.class.getClassLoader()
+        /*Stego stego = new Stego(Stego.class.getClassLoader()
                 .getResource("foto.bmp").toURI());
         byte[] juankerImage = stego.encodeTextIntoImage("patata".getBytes());
-        URI juankerFoto = Stego.class.getClassLoader()
-                .getResource("juankerfoto.bmp").toURI();
-        Files.write(Paths.get(juankerFoto), juankerImage);
+        Files.write(Paths.get("juankerfoto.bmp"), juankerImage);*/
+        Stego stego = new Stego(Stego.class.getClassLoader()
+                .getResource("juankerfoto.bmp").toURI());
+        byte[] juankerImage = stego.decodeTextFromImage();
+        System.out.println(juankerImage);
     }
 
     private class PixelIterator implements Iterator<Integer> {
