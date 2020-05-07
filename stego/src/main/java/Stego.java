@@ -6,6 +6,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Iterator;
 
 public class Stego {
 
@@ -25,11 +26,20 @@ public class Stego {
 
     }
 
-    public byte[] encodeTextIntoImage() {
+    public byte[] encodeTextIntoImage(byte[] text) {
         if (!isPossibleToHide()) {
-            throw new IllegalArgumentException("Not possible to hide info");
+            throw new IllegalArgumentException("Not possible to hide info \uD83D\uDE22");
         }
-        return null;
+        var pixelIterator = new PixelIterator();
+        for (var character : text) {
+            if (pixelIterator.hasNext()) {
+                byteImage[pixelIterator.next()] = character;
+            } else {
+                throw new IllegalArgumentException("Text too long to be hidden \uD83D\uDE22");
+            }
+        }
+
+        return byteImage;
     }
 
     public byte[] decodeTextIntoImage() {
@@ -56,13 +66,38 @@ public class Stego {
         return bufferedImage.getHeight();
     }
 
-    private int getImageStart(byte[] image) {
-        return image[IMAGE_START_POSITION];
+    private int getImageStart() {
+        return byteImage[IMAGE_START_POSITION];
     }
 
-    public static void main(String[] args) throws IOException, URISyntaxException {
+    public static void main(String[] args) throws URISyntaxException {
         Stego stego = new Stego(Stego.class.getClassLoader()
                 .getResource("foto.bmp").toURI());
+    }
+
+    private class PixelIterator implements Iterator<Integer> {
+
+        private int position;
+
+        public PixelIterator() {
+            position = getImageStart();
+        }
+
+        @Override
+        public boolean hasNext() {
+            return position < byteImage.length - 1;
+        }
+
+        @Override
+        public Integer next() {
+            if (position % 4 != 3) {
+                position = position + 1;
+            } else {
+                position = position + (getImageWidth() * (getBitsPerPixel() / 8));
+            }
+            return position;
+        }
+
     }
 
 }
