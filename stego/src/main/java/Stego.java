@@ -6,12 +6,15 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 public class Stego {
 
     private final static int IMAGE_START_POSITION = 10;
     private final static int PADDING_SIZE = 4;
+    private final static byte END_OF_MESSAGE = '\0';
 
     private BufferedImage bufferedImage;
     private byte[] byteImage;
@@ -38,20 +41,30 @@ public class Stego {
                 throw new IllegalArgumentException("Text too long to be hidden ☹");
             }
         }
-
+        byteImage[pixelIterator.next()] = END_OF_MESSAGE;
         return byteImage;
     }
 
-    public byte[] decodeTextIntoImage() {
-        return null;
+    public Byte[] decodeTextFromImage() {
+        List<Byte> message = new ArrayList<>();
+        var pixelIterator = new PixelIterator();
+        while(pixelIterator.hasNext()) {
+            var position = pixelIterator.next();
+            if (byteImage[position] == END_OF_MESSAGE) {
+                break;
+            }
+            message.add(byteImage[position]);
+        }
+        Byte[] intArray = new Byte[message.size()];
+        return message.toArray(intArray);
     }
 
     private boolean isPossibleToHide() {
-        return (getImageWidth() * getBitsPerPixel()) % PADDING_SIZE != 0;
+        return (getImageWidth() * (getBitsPerPixel() / 8)) % PADDING_SIZE != 0;
     }
 
-    private long getAmountOfBytes() {
-        return ((getImageWidth() * getBitsPerPixel()) % PADDING_SIZE) * getImageHeight();
+    private int getAmountOfBytes() {
+        return ((getImageWidth() * (getBitsPerPixel() / 8)) % PADDING_SIZE) * getImageHeight();
     }
 
     private int getBitsPerPixel() {
@@ -71,12 +84,17 @@ public class Stego {
     }
 
     public static void main(String[] args) throws URISyntaxException, IOException {
+        // Juanker image
         Stego stego = new Stego(Stego.class.getClassLoader()
                 .getResource("foto.bmp").toURI());
         byte[] juankerImage = stego.encodeTextIntoImage("patata".getBytes());
-        URI juankerFoto = Stego.class.getClassLoader()
-                .getResource("juankerfoto.bmp").toURI();
-        Files.write(Paths.get(juankerFoto), juankerImage);
+        Files.write(Paths.get("juankerfoto.bmp"), juankerImage);
+
+        // Dejuanker image
+        Stego stego2 = new Stego(Stego.class.getClassLoader()
+                .getResource("juankerfoto.bmp").toURI());
+        Byte[] juankerImage2 = stego.decodeTextFromImage();
+        System.out.println(juankerImage);
     }
 
     private class PixelIterator implements Iterator<Integer> {
