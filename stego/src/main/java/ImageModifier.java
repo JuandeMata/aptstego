@@ -3,14 +3,13 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class Stego {
+public class ImageModifier {
 
     private final static int IMAGE_START_POSITION = 10;
     private final static int PADDING_SIZE = 4;
@@ -19,7 +18,7 @@ public class Stego {
     private BufferedImage bufferedImage;
     private byte[] byteImage;
 
-    public Stego(URI imageUri) {
+    public ImageModifier(URI imageUri) {
         try {
             bufferedImage = ImageIO.read(new File(imageUri));
             byteImage = Files.readAllBytes(Paths.get(imageUri));
@@ -81,20 +80,6 @@ public class Stego {
 
     private int getImageStart() {
         return byteImage[IMAGE_START_POSITION];
-    }
-
-    public static void main(String[] args) throws URISyntaxException, IOException {
-        // Juanker image
-        Stego stego = new Stego(Stego.class.getClassLoader()
-                .getResource("foto.bmp").toURI());
-        byte[] juankerImage = stego.encodeTextIntoImage("patata".getBytes());
-        Files.write(Paths.get("juankerfoto.bmp"), juankerImage);
-
-        // Dejuanker image
-        Stego stego2 = new Stego(Stego.class.getClassLoader()
-                .getResource("juankerfoto.bmp").toURI());
-        Byte[] juankerImage2 = stego.decodeTextFromImage();
-        System.out.println(juankerImage);
     }
 
     private class PixelIterator implements Iterator<Integer> {
