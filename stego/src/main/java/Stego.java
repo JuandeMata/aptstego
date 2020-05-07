@@ -14,6 +14,7 @@ public class Stego {
 
     private final static int IMAGE_START_POSITION = 10;
     private final static int PADDING_SIZE = 4;
+    private final static byte END_OF_MESSAGE = '\0';
 
     private BufferedImage bufferedImage;
     private byte[] byteImage;
@@ -40,18 +41,22 @@ public class Stego {
                 throw new IllegalArgumentException("Text too long to be hidden \uD83D\uDE22");
             }
         }
-
+        byteImage[pixelIterator.next()] = END_OF_MESSAGE;
         return byteImage;
     }
 
-    public byte[] decodeTextFromImage() {
+    public Byte[] decodeTextFromImage() {
         List<Byte> message = new ArrayList<>();
         var pixelIterator = new PixelIterator();
         while(pixelIterator.hasNext()) {
             var position = pixelIterator.next();
+            if (byteImage[position] == END_OF_MESSAGE) {
+                break;
+            }
             message.add(byteImage[position]);
         }
-        return null;
+        Byte[] intArray = new Byte[message.size()];
+        return message.toArray(intArray);
     }
 
     private boolean isPossibleToHide() {
@@ -59,7 +64,7 @@ public class Stego {
     }
 
     private int getAmountOfBytes() {
-        return ((getImageWidth() * getBitsPerPixel()) % PADDING_SIZE) * getImageHeight();
+        return ((getImageWidth() * (getBitsPerPixel() / 8)) % PADDING_SIZE) * getImageHeight();
     }
 
     private int getBitsPerPixel() {
@@ -79,13 +84,16 @@ public class Stego {
     }
 
     public static void main(String[] args) throws URISyntaxException, IOException {
-        /*Stego stego = new Stego(Stego.class.getClassLoader()
+        // Juanker image
+        Stego stego = new Stego(Stego.class.getClassLoader()
                 .getResource("foto.bmp").toURI());
         byte[] juankerImage = stego.encodeTextIntoImage("patata".getBytes());
-        Files.write(Paths.get("juankerfoto.bmp"), juankerImage);*/
-        Stego stego = new Stego(Stego.class.getClassLoader()
+        Files.write(Paths.get("juankerfoto.bmp"), juankerImage);
+
+        // Dejuanker image
+        Stego stego2 = new Stego(Stego.class.getClassLoader()
                 .getResource("juankerfoto.bmp").toURI());
-        byte[] juankerImage = stego.decodeTextFromImage();
+        Byte[] juankerImage2 = stego.decodeTextFromImage();
         System.out.println(juankerImage);
     }
 
