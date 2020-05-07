@@ -10,7 +10,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="stego" target="11" />
+      <module name="stego" target="1.5" />
     </bytecodeTargetLevel>
   </component>
 </project>
