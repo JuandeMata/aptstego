@@ -1,15 +1,25 @@
+import net.lingala.zip4j.ZipFile;
+import net.lingala.zip4j.model.ZipParameters;
+import net.lingala.zip4j.model.enums.AesKeyStrength;
+import net.lingala.zip4j.model.enums.EncryptionMethod;
+
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class Main {
 
     public static void main(String[] args) throws URISyntaxException, IOException {
+        ZipPacker zipPacker = new ZipPacker();
+        Path zipPath = Paths.get(zipPacker.ZipCreator());
+        byte[] zipFile = Files.readAllBytes(zipPath);
+
         // Juanker image
         ImageModifier imageModifier = new ImageModifier(ImageModifier.class.getClassLoader()
                 .getResource("foto.bmp").toURI());
-        byte[] juankerImage = imageModifier.encodeTextIntoImage("patata".getBytes());
+        byte[] juankerImage = imageModifier.encodeTextIntoImage(zipFile);
         Files.write(Paths.get("juankerfoto.bmp"), juankerImage);
 
         // Dejuanker image
