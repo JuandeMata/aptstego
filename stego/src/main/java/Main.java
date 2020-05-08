@@ -1,17 +1,22 @@
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class Main {
 
     public static void main(String[] args) throws URISyntaxException, IOException {
+        ZipPacker zipPacker = new ZipPacker();
+        Path zipPath = Paths.get(zipPacker.ZipCreator());
+        byte[] zipFile = Files.readAllBytes(zipPath);
+
         String localDir = System.getProperty("user.dir"); // Path local
         ImageModifier imageModifier = new ImageModifier(ImageModifier.class.getClassLoader()
                 .getResource("foto.bmp").toURI());
 
         // Juanker image
-        byte[] juankerImage = imageModifier.encodeTextIntoImage("patata".getBytes());
+        byte[] juankerImage = imageModifier.encodeTextIntoImage(zipFile);
         Files.write(Paths.get("juankerfoto.bmp"), juankerImage);
         //Files.write(Paths.get(localDir + "\\stego\\src\\main\\resources\\juankerfoto.bmp"), juankerImage); // Para guardar en resources en vez de en la raiz
 
