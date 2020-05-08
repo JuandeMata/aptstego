@@ -6,19 +6,21 @@ import java.nio.file.Paths;
 public class Main {
 
     public static void main(String[] args) throws URISyntaxException, IOException {
-        // Juanker image
+        String localDir = System.getProperty("user.dir"); // Path local
         ImageModifier imageModifier = new ImageModifier(ImageModifier.class.getClassLoader()
                 .getResource("foto.bmp").toURI());
+
+        // Juanker image
         byte[] juankerImage = imageModifier.encodeTextIntoImage("patata".getBytes());
         Files.write(Paths.get("juankerfoto.bmp"), juankerImage);
+        //Files.write(Paths.get(localDir + "\\stego\\src\\main\\resources\\juankerfoto.bmp"), juankerImage); // Para guardar en resources en vez de en la raiz
 
         // Dejuanker image
         ImageModifier imageModifier2 = new ImageModifier(ImageModifier.class.getClassLoader()
                 .getResource("juankerfoto.bmp").toURI());
         Byte[] juankerImage2 = imageModifier.decodeTextFromImage();
-        System.out.println(juankerImage);
+        System.out.println(juankerImage); //FIXME: no seria juankerImage2?
     }
-
 }
 
 /* TODO:
