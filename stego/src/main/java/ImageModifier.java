@@ -25,19 +25,20 @@ public class ImageModifier {
         } catch (IOException e) {
             throw new IllegalArgumentException("Unable to get image");
         }
-
     }
 
     public byte[] encodeTextIntoImage(byte[] text) {
         if (!isPossibleToHide()) {
-            throw new IllegalArgumentException("Not possible to hide info \uD83D\uDE22");
+            ImageCropper imgCropper = new ImageCropper(bufferedImage);
+            bufferedImage = imgCropper.getCroppedImage(); //Si no vale, le quitamos una columna de pixeles
+//            throw new IllegalArgumentException("Not possible to hide info ☹");
         }
         var pixelIterator = new PixelIterator();
         for (var character : text) {
             if (pixelIterator.hasNext()) {
                 byteImage[pixelIterator.next()] = character;
             } else {
-                throw new IllegalArgumentException("Text too long to be hidden \uD83D\uDE22");
+                throw new IllegalArgumentException("Text too long to be hidden ☹");
             }
         }
         byteImage[pixelIterator.next()] = END_OF_MESSAGE;

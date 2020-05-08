@@ -1,34 +1,26 @@
-import net.lingala.zip4j.ZipFile;
-import net.lingala.zip4j.model.ZipParameters;
-import net.lingala.zip4j.model.enums.AesKeyStrength;
-import net.lingala.zip4j.model.enums.EncryptionMethod;
-
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class Main {
 
     public static void main(String[] args) throws URISyntaxException, IOException {
-        ZipPacker zipPacker = new ZipPacker();
-        Path zipPath = Paths.get(zipPacker.ZipCreator());
-        byte[] zipFile = Files.readAllBytes(zipPath);
-
-        // Juanker image
+        String localDir = System.getProperty("user.dir"); // Path local
         ImageModifier imageModifier = new ImageModifier(ImageModifier.class.getClassLoader()
                 .getResource("foto.bmp").toURI());
-        byte[] juankerImage = imageModifier.encodeTextIntoImage(zipFile);
+
+        // Juanker image
+        byte[] juankerImage = imageModifier.encodeTextIntoImage("patata".getBytes());
         Files.write(Paths.get("juankerfoto.bmp"), juankerImage);
+        //Files.write(Paths.get(localDir + "\\stego\\src\\main\\resources\\juankerfoto.bmp"), juankerImage); // Para guardar en resources en vez de en la raiz
 
         // Dejuanker image
         ImageModifier imageModifier2 = new ImageModifier(ImageModifier.class.getClassLoader()
                 .getResource("juankerfoto.bmp").toURI());
         Byte[] juankerImage2 = imageModifier.decodeTextFromImage();
-        System.out.println(juankerImage);
+        System.out.println(juankerImage); //FIXME: no seria juankerImage2?
     }
-
 }
 
 /* TODO:
