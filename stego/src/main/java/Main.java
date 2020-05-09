@@ -1,3 +1,5 @@
+import net.lingala.zip4j.ZipFile;
+
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
@@ -24,6 +26,9 @@ public class Main {
         ImageModifier imageModifier2 = new ImageModifier(ImageModifier.class.getClassLoader()
                 .getResource("juankerfoto.bmp").toURI());
         Byte[] juankerImage2 = imageModifier.decodeTextFromImage();
+
+        zipPacker.DecodeZip(juankerImage2);
+
         System.out.println(juankerImage); //FIXME: no seria juankerImage2?
     }
 }
