@@ -1,4 +1,5 @@
 import net.lingala.zip4j.ZipFile;
+import net.lingala.zip4j.exception.ZipException;
 import net.lingala.zip4j.model.ZipParameters;
 import net.lingala.zip4j.model.enums.AesKeyStrength;
 import net.lingala.zip4j.model.enums.EncryptionMethod;
@@ -9,10 +10,10 @@ import java.util.List;
 
 public class ZipPacker {
     ZipParameters zipParameters = new ZipParameters();
+    String zipName = "hiddenZip.zip";
+    String passwd = "APTStego";
 
     public String ZipCreator() throws IOException {
-        String zipName = "hiddenZip.zip";
-        String passwd = "APTStego";
 
         MessageReader messageReader = new MessageReader();
         String inputPath = messageReader.inputSelector();
@@ -30,4 +31,7 @@ public class ZipPacker {
         return zipName;
     }
 
+    public void ZipUnpacker () throws ZipException {
+        new ZipFile(zipName, passwd.toCharArray()).extractAll("/destination_directory");
+    }
 }
