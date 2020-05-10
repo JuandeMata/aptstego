@@ -27,7 +27,7 @@ public class ImageModifier {
         }
     }
 
-    public byte[] encodeTextIntoImage(byte[] text) {
+    public byte[] encodeTextIntoImage(Byte[] text) {
         if (!isPossibleToHide()) {
             ImageCropper imgCropper = new ImageCropper(bufferedImage);
             bufferedImage = imgCropper.getCroppedImage(); //Si no vale, le quitamos una columna de pixeles
@@ -63,7 +63,7 @@ public class ImageModifier {
         return (getImageWidth() * (getBitsPerPixel() / 8)) % PADDING_SIZE != 0;
     }
 
-    private int getAmountOfBytes() {
+    public int getAmountOfBytesToHide() {
         return ((getImageWidth() * (getBitsPerPixel() / 8)) % PADDING_SIZE) * getImageHeight();
     }
 
@@ -80,15 +80,17 @@ public class ImageModifier {
     }
 
     private int getImageStart() {
-        return byteImage[IMAGE_START_POSITION];
+        return Byte.toUnsignedInt(byteImage[IMAGE_START_POSITION]);
     }
 
     private class PixelIterator implements Iterator<Integer> {
 
         private int position;
+        private boolean init;
 
         public PixelIterator() {
             position = getImageStart();
+            init = false;
         }
 
         @Override
@@ -98,9 +100,10 @@ public class ImageModifier {
 
         @Override
         public Integer next() {
-            if (position % 4 != 3) {
+            if (position % 4 != 3 && init) {
                 position = position + 1;
             } else {
+                init = true;
                 position = position + (getImageWidth() * (getBitsPerPixel() / 8));
             }
             return position;

@@ -12,7 +12,7 @@ public class MessageReader {
         do {
             System.out.println("Do you want to insert a message in the terminal?Y/N");
             input = userInput.nextLine().toLowerCase();
-        } while (input != "y" || input != "yes" || input != "n" || input != "no");
+        } while (!input.equals("y") && !input.equals("yes") && !input.equals("n") && !input.equals("no"));
 
         switch (input) {
             case "yes":
@@ -23,7 +23,7 @@ public class MessageReader {
                 do {
                     System.out.println("Do you want to hide a file?Y/N");
                     input = userInput.nextLine().toLowerCase();
-                } while (input != "y" || input != "yes" || input != "n" || input != "no");
+                } while (!input.equals("y") && !input.equals("yes") && !input.equals("n") && !input.equals("no"));
 
                 switch (input) {
                     case "yes":
