@@ -41,7 +41,7 @@ public class ImageModifier {
                 throw new IllegalArgumentException("Text too long to be hidden ☹");
             }
         }
-        byteImage[pixelIterator.next()] = END_OF_MESSAGE;
+        //byteImage[pixelIterator.next()] = END_OF_MESSAGE;
         return byteImage;
     }
 
@@ -50,7 +50,7 @@ public class ImageModifier {
         var pixelIterator = new PixelIterator();
         while(pixelIterator.hasNext()) {
             var position = pixelIterator.next();
-            if (byteImage[position] == END_OF_MESSAGE) {
+            if (position > byteImage.length) {
                 break;
             }
             message.add(byteImage[position]);
