@@ -5,12 +5,25 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public class Main {
 
     public static void main(String[] args) throws URISyntaxException, IOException {
-        new ImageStego().encodeTextIntoLibrary("\"But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness. No one rejects, dislikes, or avoids pleasure itself, because it is pleasure, but because those who do not know how to pursue pleasure rationally encounter consequences that are extremely painful. Nor again is there anyone who loves or pursues or desires to obtain pain of itself, because it is pain, but because occasionally circumstances occur in which toil and pain can procure him some great pleasure. To take a trivial example, which of us ever undertakes laborious physical exercise, except to obtain some advantage from it? But who has any right to find fault with a man who chooses to enjoy a pleasure that has no annoying consequences, or one who avoids a pain that produces no resultant pleasure?\"".getBytes());
+        new ImageStego().encodeTextIntoLibrary(("\n" +
+                "\n" +
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur ac turpis sapien. Nulla dictum fringilla nunc sit amet varius. Sed quis mauris eu enim sodales pulvinar eu vitae augue. Pellentesque tellus eros, varius eget magna ac, auctor mollis neque. Curabitur a iaculis sem. Donec feugiat, ex eget varius mattis, felis risus auctor felis, at eleifend arcu purus eget felis. Integer consequat purus et diam sodales sagittis.\n" +
+                "\n" +
+                "Fusce id luctus metus. Sed imperdiet ultricies dui, sed vulputate orci egestas et. Suspendisse mi orci, interdum placerat dapibus quis, luctus vel orci. Fusce semper neque id elit elementum aliquet. Nulla facilisi. Mauris eget cursus ipsum. Sed lacinia lorem vitae ex iaculis condimentum. Maecenas mattis eu nisl eget laoreet. Curabitur ac varius purus. Praesent lacinia ac felis nec tempus. Donec maximus libero eget leo tempor porttitor. Vivamus congue condimentum tortor ut maximus. Vestibulum fringilla metus euismod aliquet ultricies. Fusce vel tristique nulla. Sed egestas dui ac massa eleifend vestibulum. Suspendisse congue rutrum dolor eget sodales.\n" +
+                "\n" +
+                "Praesent a lorem sit amet augue vehicula sodales vitae et risus. Proin porttitor nisl quis nisl porta, quis condimentum ligula mollis. Duis porta sagittis imperdiet. Ut ac dui in ante ultrices aliquam. Quisque a purus eleifend, ornare est vitae, porta lorem. Maecenas imperdiet odio eget velit mollis, quis lobortis justo cursus. Donec molestie augue ut euismod venenatis. Praesent ultricies mauris dui, ut cursus magna dignissim a. Interdum et malesuada fames ac ante ipsum primis in faucibus. In dolor risus, elementum id magna non, imperdiet pulvinar ipsum. Mauris in neque metus. Suspendisse potenti. Proin et quam risus. Donec eu tellus id mauris molestie facilisis eu at quam. Duis ut nisi lobortis, fermentum magna at, egestas nisl. Nulla sagittis ornare neque, sed tincidunt quam bibendum placerat.\n" +
+                "\n" +
+                "Vivamus bibendum mi ac eros tempus, ac maximus sem condimentum. Nam luctus lacus sit amet mauris imperdiet mollis. Nam suscipit turpis nec rutrum convallis. Quisque sodales nunc iaculis nunc semper cursus. Donec scelerisque turpis eu aliquet maximus. Vivamus bibendum, tellus nec dictum elementum, turpis lorem porta orci, at imperdiet augue enim non arcu. Sed suscipit nisl at sollicitudin convallis. Mauris sit amet erat mauris. Morbi molestie neque sit amet mi dapibus tincidunt. Etiam pretium tincidunt blandit. Integer efficitur rutrum lorem sed mollis. Curabitur semper, sapien tristique ultrices finibus, nulla velit aliquet odio, vitae gravida diam enim ut ligula. Fusce a arcu non velit convallis efficitur et ut augue. Praesent vitae metus a nisi sodales sagittis. Pellentesque et pellentesque justo, vitae lacinia tellus.\n" +
+                "\n" +
+                "In sed tempor nisl. Morbi at quam nisi. Mauris quam lectus, laoreet vitae sollicitudin quis, mollis eget ante. Cras molestie tellus lectus, volutpat tincidunt erat venenatis quis. Proin ut blandit libero. Nunc turpis ipsum, semper vitae nisi id, egestas cursus ipsum. Integer in eleifend risus. Duis id porttitor enim. Ut ac laoreet nulla, a pharetra risus. Quisque vestibulum sapien non vestibulum interdum. Integer faucibus mattis velit, sit amet ultricies diam. Morbi sapien metus, pharetra sed nunc ac, ullamcorper porta nunc.").getBytes());
         Byte[] decoded = new ImageStego().getTextFromLibrary();
+        System.out.println(Arrays.stream(decoded).map(by -> new byte[]{by}).map(String::new).collect(Collectors.joining()));
         System.exit(0);
         ZipPacker zipPacker = new ZipPacker();
         Path zipPath = Paths.get(zipPacker.ZipCreator());

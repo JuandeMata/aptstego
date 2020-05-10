@@ -17,7 +17,7 @@ public class ImageStego {
         var imageUris = Files.walk(imagesPath).filter(file -> file.toString().endsWith(".bmp")).map(Path::toUri).collect(Collectors.toList());
         for (int imageIndex = 0, currentOffset = 0; imageIndex < imageUris.size(); imageIndex++) {
             ImageModifier imageModifier = new ImageModifier(imageUris.get(imageIndex));
-            int bytesAvailable = imageModifier.getAmountOfBytesToHide() - 3;
+            int bytesAvailable = imageModifier.getAmountOfBytesToHide() - 4;
             if (currentOffset + bytesAvailable < text.length) {
                 writeImage(imageModifier.encodeTextIntoImage(getFormattedMessage(imageIndex, currentOffset, bytesAvailable, text)), imageIndex);
                 currentOffset = currentOffset + bytesAvailable;
@@ -43,6 +43,8 @@ public class ImageStego {
         var bytes = new ArrayList<Byte>();
         bytes.add((byte) (currentIndex & 0xFF));
         bytes.add((byte) ((currentIndex >> 8) & 0xFF));
+        bytes.add((byte) (size & 0xFF));
+        bytes.add((byte) ((size >> 8) & 0xFF));
         for (int index = 0; index < size; index++) {
             bytes.add(message[index + currentOffset]);
         }
@@ -66,7 +68,8 @@ public class ImageStego {
             ImageModifier imageModifier = new ImageModifier(imageUris.get(imageIndex));
             var message = imageModifier.decodeTextFromImage();
             var messagePosition = Byte.toUnsignedInt(message[0]) + (Byte.toUnsignedInt(message[1]) << 8);
-            messages.put(messagePosition, Arrays.copyOfRange(message, 2, message.length));
+            var messageSize = Byte.toUnsignedInt(message[2]) + (Byte.toUnsignedInt(message[3]) << 8);
+            messages.put(messagePosition, Arrays.copyOfRange(message, 4, messageSize + 4));
         }
         var orderedMessage = messages.entrySet().stream().map(Map.Entry::getValue).flatMap(Arrays::stream).collect(Collectors.toList());
 

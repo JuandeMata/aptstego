@@ -13,7 +13,6 @@ public class ImageModifier {
 
     private final static int IMAGE_START_POSITION = 10;
     private final static int PADDING_SIZE = 4;
-    private final static byte END_OF_MESSAGE = '\0';
 
     private BufferedImage bufferedImage;
     private byte[] byteImage;
@@ -41,7 +40,6 @@ public class ImageModifier {
                 throw new IllegalArgumentException("Text too long to be hidden ☹");
             }
         }
-        //byteImage[pixelIterator.next()] = END_OF_MESSAGE;
         return byteImage;
     }
 
