@@ -16,7 +16,7 @@ public class ZipPacker {
     private static ZipParameters zipParameters = new ZipParameters();
     private static String zipName = "hiddenZip.zip";
     private static String passwd = "APTStego";
-    private static String zipToDecode = "/resources/zipToDecode.zip";
+    private static String zipToDecode = "zipToDecode.zip";
 
     public String ZipCreator() throws IOException {
 
@@ -38,7 +38,7 @@ public class ZipPacker {
 
     public void DecodeZip (Byte[] zipInBytes) throws ZipException {
         byte[] bytes = ArrayUtils.toPrimitive(zipInBytes);
-        try (FileOutputStream stream = new FileOutputStream("/resources/zipToDecode.zip")) {
+        try (FileOutputStream stream = new FileOutputStream("zipToDecode.zip")) {
             stream.write(bytes);
         } catch (IOException e) {
             e.printStackTrace();
@@ -47,6 +47,6 @@ public class ZipPacker {
     }
 
     private void ZipUnpacker () throws ZipException {
-        new ZipFile(zipToDecode, passwd.toCharArray()).extractAll("/resources");
+        new ZipFile(zipToDecode, passwd.toCharArray()).extractAll("resources");
     }
 }
